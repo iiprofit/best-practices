@@ -10,8 +10,9 @@ dotenv.config();
 
 // Store sensitive information from env file to this file which we can use in project.
 const MONGO_USERNAME = process.env.MONGO_USERNAME || "";
-const MONGO_PASSWORD = process.env.MANGO_PASSWORD || "";
-const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@127.0.0.1:27017/?authMechanism=DEFAULT&authSource=db_crud`;
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD || "";
+const MONGO_DB = process.env.DB_Name || "";
+const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@localhost:27017/?authMechanism=DEFAULT&authSource=${MONGO_DB}`;
 const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
   : 1337;

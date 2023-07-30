@@ -37,6 +37,7 @@ Install following packages
   npm install ts-node typescript
   npm install nodemon chalk dotenv express joy mongoose bcryptjs uuid cors express-validator jsonwebtoken
   npm install @types/express @types/uuid @types/cors
+  npm install mocha chai --save-dev
 ```
 
 Add typescript configuration file. You can use this project's file as well or download from typescript's official website. Use following settings for the configuration file
@@ -111,7 +112,7 @@ Start project using following command
 
 **Server:** Node, Express
 
-## Installation
+## Server Directory
 
 Following is the folder structure of server section.
 
@@ -126,7 +127,16 @@ Following is the folder structure of server section.
 ├── package.json 
 └── .gitignore
 
+## Server Setup
+This section explain how you can create node js server with best practices.As you can see project structure in above section, this section explain use and importance of each file.
 
+1. config.ts
+    -- sfsdfs
+2. httpStatus.ts
+3. objectReturn.ts
+4. userModel.ts
+5. userController.ts
+6. userRoutes.ts
 
 ## Temp
 
