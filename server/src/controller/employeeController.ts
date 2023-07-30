@@ -79,6 +79,15 @@ const createEmployee = async (
 
       return res.status(code).json({ code, data, message });
     }
+
+    // Return express-validator error result.
+    const { code, data, message } = getHandlerResponseObject(
+      false,
+      httpStatus.Bad_Request,
+      "Employee's validation error",
+      error
+    );
+    return res.status(code).json({ code, data, message });
   } catch (error) {
     Logging.error(error);
   }
@@ -148,62 +157,76 @@ const updateEmployee = async (
   next: NextFunction
 ) => {
   try {
-    // Get all data into this variable.
-    const updatedEmployeeData = req.body;
+    // Create object for the express-validator result checking.
+    const error = validationResult(req);
 
-    // Get role id from the params
-    let employeeId: string = req.params.id;
+    if (error.isEmpty()) {
+      // Get all data into this variable.
+      const updatedEmployeeData = req.body;
 
-    // Check is given role id is valid or not
-    if (!mongoose.isValidObjectId(employeeId)) {
+      // Get role id from the params
+      let employeeId: string = req.params.id;
+
+      // Check is given role id is valid or not
+      if (!mongoose.isValidObjectId(employeeId)) {
+        const { code, data, message } = getHandlerResponseObject(
+          false,
+          httpStatus.Bad_Request,
+          "Employee's id is not valid in role update operation"
+        );
+        return res.status(code).json({ code, message, data });
+      }
+
+      // Fetch employee based on role id
+      const existingEmployee: any | null = await EmployeeMasterModel.findById(
+        employeeId
+      );
+
+      // Check is role is available or not.
+      if (!existingEmployee) {
+        const { code, data, message } = getHandlerResponseObject(
+          false,
+          httpStatus.Not_Found,
+          "Employee is not found"
+        );
+        return res.status(code).json({ code, message, data });
+      }
+
+      // update existing role object with updated column values
+      Object.keys(updatedEmployeeData).forEach((key) => {
+        existingEmployee[key] = updatedEmployeeData[key];
+      });
+
+      let result = await existingEmployee.save();
+
+      // Check is role is available or not.
+      if (!result) {
+        const { code, data, message } = getHandlerResponseObject(
+          false,
+          httpStatus.Bad_Request,
+          "Employee is not found"
+        );
+        return res.status(code).json({ code, message, data });
+      }
+
+      // Return Response of the add/create operation
       const { code, data, message } = getHandlerResponseObject(
-        false,
-        httpStatus.Bad_Request,
-        "Employee's id is not valid in role update operation"
+        true,
+        httpStatus.OK,
+        "Employee Details Updated Successfully",
+        result
       );
       return res.status(code).json({ code, message, data });
     }
 
-    // Fetch employee based on role id
-    const existingEmployee: any | null = await EmployeeMasterModel.findById(
-      employeeId
-    );
-
-    // Check is role is available or not.
-    if (!existingEmployee) {
-      const { code, data, message } = getHandlerResponseObject(
-        false,
-        httpStatus.Not_Found,
-        "Employee is not found"
-      );
-      return res.status(code).json({ code, message, data });
-    }
-
-    // update existing role object with updated column values
-    Object.keys(updatedEmployeeData).forEach((key) => {
-      existingEmployee[key] = updatedEmployeeData[key];
-    });
-
-    let result = await existingEmployee.save();
-
-    // Check is role is available or not.
-    if (!result) {
-      const { code, data, message } = getHandlerResponseObject(
-        false,
-        httpStatus.Bad_Request,
-        "Employee is not found"
-      );
-      return res.status(code).json({ code, message, data });
-    }
-
-    // Return Response of the add/create operation
+    // Return express-validator error result.
     const { code, data, message } = getHandlerResponseObject(
-      true,
-      httpStatus.OK,
-      "Employee Details Updated Successfully",
-      result
+      false,
+      httpStatus.Bad_Request,
+      "Employee's validation error",
+      error
     );
-    return res.status(code).json({ code, message, data });
+    return res.status(code).json({ code, data, message });
   } catch (error) {
     Logging.error;
   }

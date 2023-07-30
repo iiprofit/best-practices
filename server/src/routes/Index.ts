@@ -16,7 +16,7 @@ const router = Router();
  * @httpStatus This module contain all type of http status code which we can use in this page
  * @EmployeeRouter This module contains all the user specific routes
  */
-import { EmployeeRouter } from "./employeeRoutes"
+import { EmployeeRouter } from "./Employee/employeeRoutes"
 import httpStatus from "../helper/http_status";
 
 // Add the UserRoutes into the application

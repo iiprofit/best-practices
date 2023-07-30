@@ -6,9 +6,11 @@
 import express from "express";
 
 // User controller import for connecting specific route to specific method
-import { EmployeeController } from "../controller/Index"
+import { EmployeeController } from "../../controller/Index";
 
 // user validation schema import
+import EmployeeSchema from "./employeeValidation";
+import EmployeeSchema2 from "./employeeValidation2";
 
 // Express validator import
 import { checkSchema } from "express-validator";
@@ -17,7 +19,11 @@ import { checkSchema } from "express-validator";
 const EmployeeRouter = express.Router();
 
 // Route for create employee
-EmployeeRouter.post("/employee", EmployeeController.createEmployee);
+EmployeeRouter.post(
+  "/employee",
+  EmployeeSchema2.employeeCreate(),
+  EmployeeController.createEmployee
+);
 
 // Route for get single employee
 EmployeeRouter.get("/employee/:id", EmployeeController.getSingleEmployee);
@@ -26,9 +32,7 @@ EmployeeRouter.get("/employee/:id", EmployeeController.getSingleEmployee);
 EmployeeRouter.get("/employee", EmployeeController.getEmployees);
 
 // Route for update roles
-EmployeeRouter.put("/employee/:id", EmployeeController.updateEmployee);
-
-
+EmployeeRouter.put("/employee/:id",EmployeeSchema2.employeeUpdate(),EmployeeController.updateEmployee);
 
 // Export Entire user route which will latter used in the application
 export { EmployeeRouter };
